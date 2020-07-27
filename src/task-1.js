@@ -1,4 +1,4 @@
-const readline = require('readline');
+import readline from 'readline';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -13,4 +13,4 @@ const reverseString = () => {
   });
 };
 
-reverseString();
+export default reverseString;
