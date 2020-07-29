@@ -8,8 +8,8 @@
   },
   "scripts": {
     "build": "babel src --out-dir dist",
-    "task1": "node dist/bin/task1.js",
-    "task2": "node dist/bin/task2.js"
+    "task1": "nodemon --exec babel-node src/bin/task1.js",
+    "task2": "nodemon --exec babel-node src/bin/task2.js"
   },
   "repository": {
     "type": "git",
