@@ -1,19 +1,3 @@
-// const csv = require('csvtojson')
-
-
-
-// csv()
-// .fromFile(csvFilePath)
-// .then((jsonObj)=>{
-//   console.log(jsonObj);
-// });
-
-// const readStream = require('fs').createReadStream(csvFilePath);
-
-// const writeStream = '../scv/nodejs-hw1-ex1.json';
-
-// readStream.pipe(csv()).pipe(writeStream);
-
 import fs from 'fs';
 import path from 'path';
 import { pipeline } from 'stream';
