@@ -1,5 +1,15 @@
 import express from 'express';
+import Joi from '@hapi/joi';
+import expressJoiValidation from 'express-joi-validation';
 import User from './entities/User';
+
+const validator = expressJoiValidation.createValidator({});
+
+const userSchema = Joi.object({
+  login: Joi.string().required(),
+  password: Joi.string().pattern(new RegExp('[a-zA-Z]{1,}[0-9]{1,}')).required(),
+  age: Joi.number().min(4).max(130).required()
+});
 
 const getAutoSuggestUsers = (users, loginSubstring, limit) => {
   const suggestUsers = users.filter(({ login }) => login.includes(loginSubstring));
@@ -17,9 +27,9 @@ export default () => {
   app.use(express.urlencoded({ extended: true }));
 
   const users = [
-    new User('Sveta', 'xxx', 44, false),
-    new User('Lina', 'yyy', 38, false),
-    new User('Lesha', 'zzz', 41, false)
+    new User('Sveta', 'xx1x', 44, false),
+    new User('Lina', 'yy2y', 38, false),
+    new User('Lesha', 'zz3z', 41, false)
   ];
 
   app.get('/users/:id', (req, res) => {
@@ -33,14 +43,14 @@ export default () => {
     res.send(suggestUsers);
   });
 
-  app.post('/users', (req, res) => {
+  app.post('/users', validator.body(userSchema), (req, res) => {
     const { login, password, age } = req.body;
     const user = new User(login, password, age);
     users.push(user);
     res.send(user);
   });
 
-  app.patch('/users/:id', (req, res) => {
+  app.patch('/users/:id', validator.body(userSchema), (req, res) => {
     const user = users.find((u) => u.id === req.params.id);
     const { login, password, age } = req.body;
     user.login = login;

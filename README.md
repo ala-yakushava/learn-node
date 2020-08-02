@@ -4,6 +4,18 @@
 $ npm install
 ```
 
+## Запуск сервера
+
+```sh
+$ npm start
+```
+
+## Линтер
+
+```sh
+$ npm run lint
+```
+
 ## Сборка
 
 ```sh
