@@ -1,46 +1,55 @@
-import { Op } from 'sequelize';
+export class UserService {
+  constructor(userRepository) {
+    this.userRepository = userRepository;
+  }
 
-import { User } from '../models';
+  async create(data) {
+    try {
+      return await this.userRepository.create(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-export const createUser = async (login, password, age) => {
-  const user = await User.create({ login, password, age });
-  return user;
-};
+  async findById(id) {
+    try {
+      return await this.userRepository.findById(id);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-export const findUser = async (id) => {
-  const [user] = await User.findAll({
-    where: { id }
-  });
-  return user;
-};
+  async findByParams(substring = '', limit = 10) {
+    const filter = {
+      key: 'login',
+      value: substring
+    };
 
-export const findAllUser = async (substring = '', limit = 10) => {
-  const users = await User.findAll({
-    where: {
-      login: {
-        [Op.substring]: substring
-      }
-    },
-    limit,
-    order: [
-      ['login', 'ASC']
-    ]
-  });
-  return users;
-};
+    const sort = {
+      key: 'login',
+      order: 'ASC'
+    };
 
-export const removeUser = async (id) => {
-  const user = await User.destroy({
-    where: { id }
-  });
-  return user;
-};
+    try {
+      return await this.userRepository.findByParams(filter, sort, limit);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-export const updateUser = async (id, login, password, age) => {
-  const user = await User.update(
-    { login, password, age },
-    { where: { id } }
-  );
+  async removeById(id) {
+    try {
+      return await this.userRepository.removeById(id);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-  return user;
-};
+  async update(id, data) {
+    try {
+      return await this.userRepository.update(id, data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}

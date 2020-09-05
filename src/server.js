@@ -1,20 +1,16 @@
 import express from 'express';
 
-import { addRouters } from './controllers';
+import { setupRoutes } from './routes';
 import { port } from './config';
 
 export const start = () => {
-  const app = express();
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  const server = express();
+  server.use(express.json());
+  server.use(express.urlencoded({ extended: true }));
 
-  app.get('/', (req, res) => {
-    res.send('Hello World!');
-  });
+  setupRoutes(server);
 
-  addRouters(app);
-
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Server has been started on ${port}`);
   });
 };

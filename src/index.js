@@ -1,7 +1,7 @@
 import { connect, sync } from './db';
 import { start } from './server';
 
-export default async () => {
+export default () => {
   connect()
     .then(sync)
     .then(start)
