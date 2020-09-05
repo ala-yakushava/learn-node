@@ -8,8 +8,7 @@ export const userController = {
   getUser: async (req, res) => {
     const { id } = req.params;
     const user = await userService.findById(id);
-    if (user) return res.send(user);
-    res.status(404).send(`user ${id} unknow`);
+    return res.send(user);
   },
 
   getUsers: async (req, res) => {
@@ -27,15 +26,13 @@ export const userController = {
   updateUser: async (req, res) => {
     const { id } = req.params;
     const { login, password, age } = req.body;
-    const isUpdate = await userService.update(id, { login, password, age });
-    if (isUpdate) res.send(`user ${id} update`);
-    res.status(404).send(`user ${id} unknow`);
+    await userService.update(id, { login, password, age });
+    res.send(`user ${id} update`);
   },
 
   deleteUser: async (req, res) => {
     const { id } = req.params;
-    const isDelete = await userService.removeById(id);
-    if (isDelete) res.send(`user ${id} delete`);
-    res.status(404).send(`user ${id} unknow`);
+    await userService.removeById(id);
+    res.send(`user ${id} delete`);
   }
 };

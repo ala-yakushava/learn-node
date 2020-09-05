@@ -7,7 +7,7 @@ export class UserService {
     try {
       return await this.userRepository.create(data);
     } catch (error) {
-      console.error(error);
+      throw new Error('User create', error);
     }
   }
 
@@ -15,7 +15,7 @@ export class UserService {
     try {
       return await this.userRepository.findById(id);
     } catch (error) {
-      console.error(error);
+      throw new Error('User findById', error);
     }
   }
 
@@ -33,7 +33,7 @@ export class UserService {
     try {
       return await this.userRepository.findByParams(filter, sort, limit);
     } catch (error) {
-      console.error(error);
+      throw new Error('User findByParams', error);
     }
   }
 
@@ -41,7 +41,7 @@ export class UserService {
     try {
       return await this.userRepository.removeById(id);
     } catch (error) {
-      console.error(error);
+      throw new Error('User removeById', error);
     }
   }
 
@@ -49,7 +49,7 @@ export class UserService {
     try {
       return await this.userRepository.update(id, data);
     } catch (error) {
-      console.error(error);
+      throw new Error('User update', error);
     }
   }
 }
