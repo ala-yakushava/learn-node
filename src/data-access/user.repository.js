@@ -4,15 +4,11 @@ import { User } from '../models';
 
 export class UserRepository {
   async create(data) {
-    const user = await User.create(data);
-    return user;
+    return await User.create(data);
   }
 
   async findById(id) {
-    const [user] = await User.findAll({
-      where: { id }
-    });
-    return user;
+    return await User.findByPk(id);
   }
 
   async findByParams(filter, sort, limit) {
@@ -31,10 +27,7 @@ export class UserRepository {
   }
 
   async removeById(id) {
-    const isSuccess = await User.destroy({
-      where: { id }
-    });
-    return !!isSuccess;
+    return await User.destroy({ where: { id } });
   }
 
   async update(id, data) {
