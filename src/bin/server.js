@@ -1,4 +1,5 @@
-import getApp from '..';
+#! /usr/bin/env node
 
-const port = process.env.PORT || 3000;
-getApp().listen(port, () => console.log(`App listening at http://localhost:${port}`));
+import runServer from '..';
+
+runServer();
