@@ -1,5 +1,6 @@
 import { Op } from 'sequelize';
 import { Group, User } from '../models';
+import { sequelize } from '../db';
 
 export class GroupRepository {
   async create(data) {
@@ -28,17 +29,25 @@ export class GroupRepository {
   }
 
   async addUsersToGroup(groupId, userIds) {
-    const group = await Group.findByPk(groupId);
+    try {
+      await sequelize.transaction(async (t) => {
+        const group = await Group.findByPk(groupId, { transaction: t });
 
-    const users = await User.findAll({
-      where: {
-        id: {
-          [Op.or]: userIds
-        }
-      }
-    });
+        const users = await User.findAll({
+          where: {
+            id: {
+              [Op.or]: userIds
+            }
+          },
+          transaction: t
+        });
 
-    if (!group || !users.length) return;
-    return await group.addUsers(users);
+        await group.addUsers(users, { transaction: t });
+
+        return group;
+      });
+    } catch (error) {
+      throw new Error('transaction - failed', error);
+    }
   }
 }

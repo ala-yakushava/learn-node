@@ -18,7 +18,7 @@ export const setupRoutes = (server) => {
 
   server.get('/groups', groupController.getGroups);
 
-  server.post('/groups/:id', groupController.addUsersToGroup);
+  server.post('/groups/add-users', groupController.addUsersToGroup);
 
   server.post('/groups', validator.body(groupSchema), groupController.createGroup);
 

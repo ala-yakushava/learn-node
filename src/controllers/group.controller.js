@@ -36,9 +36,8 @@ export const groupController = {
   },
 
   addUsersToGroup: async (req, res) => {
-    const { id } = req.params;
-    const { userIds } = req.query;
-    await groupService.addUsersToGroup(id, userIds);
-    res.send(`users ${userIds} are added in ${id}`);
+    const { groupId, userIds } = req.body;
+    await groupService.addUsersToGroup(groupId, userIds);
+    res.send(`users ${userIds} are added to group ${groupId}`);
   }
 };
