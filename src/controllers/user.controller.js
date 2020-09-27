@@ -27,12 +27,12 @@ export const userController = {
     const { id } = req.params;
     const { login, password, age } = req.body;
     await userService.update(id, { login, password, age });
-    res.send(`user ${id} update`);
+    res.send(`user ${id} is updated`);
   },
 
   deleteUser: async (req, res) => {
     const { id } = req.params;
     await userService.removeById(id);
-    res.send(`user ${id} delete`);
+    res.send(`user ${id} is deleted`);
   }
 };

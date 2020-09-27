@@ -2,32 +2,24 @@ import { Sequelize, DataTypes } from 'sequelize';
 
 import { sequelize } from '../db';
 
-export const User = sequelize.define('User', {
+export const Group = sequelize.define('Group', {
   id: {
     type: DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true
   },
-  login: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
-    comment: "User's login"
+    comment: "Group's name"
   },
-  password: {
-    type: DataTypes.STRING,
+  permission: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
     allowNull: false,
-    comment: "User's password"
-  },
-  age: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    comment: "User's age"
+    comment: "Group's permission"
   },
   timestamps: {
     type: DataTypes.DATE,
     defaultValue: Sequelize.NOW
   }
-},
-{
-  paranoid: true
 });

@@ -16,9 +16,18 @@ export const connect = async () => {
 
 export const sync = async () => {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
     console.log('Sync all defined models to the DB.');
   } catch (error) {
     console.error('Sync error: ', error);
+  }
+};
+
+export const drop = async () => {
+  try {
+    await sequelize.drop();
+    console.log('All tables dropped!');
+  } catch (error) {
+    console.error('Drop error: ', error);
   }
 };
