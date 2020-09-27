@@ -11,7 +11,7 @@ export const groupController = {
     return res.send(group);
   },
 
-  getGroups: async (req, res) => {
+  getGroups: async (_req, res) => {
     const groups = await groupService.findAll();
     res.send(groups);
   },

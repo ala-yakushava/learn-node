@@ -1,28 +1,26 @@
+import express from 'express';
+
 import { validator, userSchema, groupSchema } from '../utils/validator';
 import { checkHealth, userController, groupController } from '../controllers';
 
-export const setupRoutes = (server) => {
-  server.get('/', checkHealth);
+const router = express.Router();
 
-  server.get('/users/:id', userController.getUser);
+router
+  .get('/', checkHealth);
 
-  server.get('/users', userController.getUsers);
+router
+  .get('/users/:id', userController.getUser)
+  .get('/users', userController.getUsers)
+  .post('/users', validator.body(userSchema), userController.createUser)
+  .patch('/users/:id', validator.body(userSchema), userController.updateUser)
+  .delete('/users/:id', userController.deleteUser);
 
-  server.post('/users', validator.body(userSchema), userController.createUser);
+router
+  .get('/groups/:id', groupController.getGroup)
+  .get('/groups', groupController.getGroups)
+  .post('/groups/add-users', groupController.addUsersToGroup)
+  .post('/groups', validator.body(groupSchema), groupController.createGroup)
+  .patch('/groups/:id', validator.body(groupSchema), groupController.updateGroup)
+  .delete('/groups/:id', groupController.deleteGroup);
 
-  server.patch('/users/:id', validator.body(userSchema), userController.updateUser);
-
-  server.delete('/users/:id', userController.deleteUser);
-
-  server.get('/groups/:id', groupController.getGroup);
-
-  server.get('/groups', groupController.getGroups);
-
-  server.post('/groups/add-users', groupController.addUsersToGroup);
-
-  server.post('/groups', validator.body(groupSchema), groupController.createGroup);
-
-  server.patch('/groups/:id', validator.body(groupSchema), groupController.updateGroup);
-
-  server.delete('/groups/:id', groupController.deleteGroup);
-};
+export default router;

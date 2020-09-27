@@ -7,7 +7,7 @@ export class GroupService {
     try {
       return await this.groupRepository.create(data);
     } catch (error) {
-      throw new Error('Group create', error);
+      throw new Error('Group - create', error);
     }
   }
 
@@ -15,7 +15,7 @@ export class GroupService {
     try {
       return await this.groupRepository.findById(id);
     } catch (error) {
-      throw new Error('Group findById', error);
+      throw new Error('Group - findById', error);
     }
   }
 
