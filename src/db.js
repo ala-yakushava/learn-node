@@ -1,4 +1,6 @@
 import Sequelize from 'sequelize';
+
+import logger from './utils/logger';
 import { username, password, database, host, dialect } from './config';
 
 export const sequelize = new Sequelize(database, username, password, {
@@ -8,26 +10,35 @@ export const sequelize = new Sequelize(database, username, password, {
 export const connect = async () => {
   try {
     await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+    logger.info('Connection has been established successfully.');
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    logger.error('Unable to connect to the database:', error);
   }
 };
 
 export const sync = async () => {
   try {
     await sequelize.sync({ alter: true });
-    console.log('Sync all defined models to the DB.');
+    logger.info('Sync all defined models to the DB.');
   } catch (error) {
-    console.error('Sync error: ', error);
+    logger.error('Unable to sync to the database:', error);
   }
 };
 
 export const drop = async () => {
   try {
     await sequelize.drop();
-    console.log('All tables dropped!');
+    logger.info('All tables dropped!');
   } catch (error) {
-    console.error('Drop error: ', error);
+    logger.error('Unable to drop to the database:', error);
+  }
+};
+
+export const close = async () => {
+  try {
+    await sequelize.close();
+    logger.info('Connection closed.');
+  } catch (error) {
+    logger.error('Unable to close to the database:', error);
   }
 };
