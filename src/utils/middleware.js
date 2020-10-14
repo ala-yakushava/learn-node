@@ -1,4 +1,4 @@
-import logger from './logger';
+import { logger } from './logger';
 
 export const logRequests = (req, _res, next) => {
   const { method, url, query, body } = req;

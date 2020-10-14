@@ -1,4 +1,4 @@
-import logger from './utils/logger';
+import { logger } from './utils/logger';
 import { connect, sync } from './db';
 import { start } from './server';
 

@@ -11,6 +11,10 @@ export class UserRepository {
     return await User.findByPk(id);
   }
 
+  async findOne(options) {
+    return await User.findOne({ where: options });
+  }
+
   async findByParams(filter, sort, limit) {
     const users = await User.findAll({
       where: {
