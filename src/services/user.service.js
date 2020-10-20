@@ -19,6 +19,14 @@ export class UserService {
     }
   }
 
+  async findOne(options) {
+    try {
+      return await this.userRepository.findOne(options);
+    } catch (error) {
+      throw new Error('User - findOne', error);
+    }
+  }
+
   async findByParams(substring = '', limit = 10) {
     const filter = {
       key: 'login',

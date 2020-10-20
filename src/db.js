@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-import logger from './utils/logger';
+import { logger } from './utils/logger';
 import { username, password, database, host, dialect } from './config';
 
 export const sequelize = new Sequelize(database, username, password, {

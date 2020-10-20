@@ -2,7 +2,7 @@ import { createLogger, format, transports } from 'winston';
 
 const { combine, timestamp, splat, json, colorize, simple } = format;
 
-const logger = createLogger({
+export const logger = createLogger({
   level: 'info',
   format: combine(
     timestamp({
@@ -25,5 +25,3 @@ if (process.env.NODE_ENV !== 'production') {
     )
   }));
 }
-
-export default logger;
