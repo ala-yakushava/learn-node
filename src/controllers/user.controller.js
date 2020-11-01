@@ -1,8 +1,4 @@
-import { UserService } from '../services';
-import { UserRepository } from '../data-access';
-
-const userRepository = new UserRepository();
-const userService = new UserService(userRepository);
+import { userService } from './setup';
 
 export const userController = {
   getUser: async (req, res) => {
@@ -26,7 +22,7 @@ export const userController = {
   updateUser: async (req, res) => {
     const { id } = req.params;
     const { login, password, age } = req.body;
-    await userService.update(id, { login, password, age });
+    await userService.updateById(id, { login, password, age });
     res.send(`user ${id} is updated`);
   },
 
