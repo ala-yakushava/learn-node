@@ -4,7 +4,7 @@ export const groupController = {
   getGroup: async (req, res) => {
     const { id } = req.params;
     const group = await groupService.findById(id);
-    return res.send(group);
+    res.send(group);
   },
 
   getGroups: async (_req, res) => {
@@ -15,7 +15,8 @@ export const groupController = {
   createGroup: async (req, res) => {
     const { name, permission } = req.body;
     const group = await groupService.create({ name, permission });
-    res.status(201).send(group);
+    res.status(201);
+    res.send(group);
   },
 
   updateGroup: async (req, res) => {

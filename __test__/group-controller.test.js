@@ -1,68 +1,83 @@
-import express from 'express';
-import request from 'supertest';
-
-import router from '../src/routes';
+import { groupController } from '../src/controllers';
 import { groupService } from '../src/controllers/setup';
 import { group, otherGroup, groups, id, ids } from './mock-data';
 
 jest.mock('../src/controllers/setup');
 
-describe('Tests for the /users path', () => {
-  let server;
+describe('Tests for groupController', () => {
+  let res;
 
-  beforeAll(async () => {
-    server = express();
-    server.use(express.json());
-    server.use(express.urlencoded({ extended: true }));
-    server.use(router);
+  beforeEach(() => {
+    res = {
+      status: jest.fn(),
+      send: jest.fn()
+    };
   });
 
-  afterAll(async () => {
-    server.close();
+  test('should find group by id', async () => {
+    const req = {
+      params: { id }
+    };
+    groupService.findById.mockImplementationOnce(() => Promise.resolve(group));
+    await groupController.getGroup(req, res);
+
+    expect(groupService.findById).toHaveBeenCalledWith(id);
+    expect(res.send).toHaveBeenCalledWith(group);
   });
 
-  describe('GET /groups/:id', () => {
-    test('should response group by id', () => {
-      groupService.findById.mockImplementationOnce(() => Promise.resolve(group));
-      return request(server).get(`/groups/${id}`).expect(200, group);
-    });
+  test('should find all groups', async () => {
+    const req = {};
+    groupService.findAll.mockImplementationOnce(() => Promise.resolve(groups));
+    await groupController.getGroups(req, res);
+
+    expect(groupService.findAll).toHaveBeenCalledTimes(1);
+    expect(res.send).toHaveBeenCalledWith(groups);
   });
 
-  describe('GET /groups', () => {
-    test('should response all groups', () => {
-      groupService.findAll.mockImplementationOnce(() => Promise.resolve(groups));
-      return request(server).get('/groups').expect(200, groups);
-    });
+  test('should create group', async () => {
+    const { name, permission } = group;
+    const req = {
+      body: { name, permission }
+    };
+    groupService.create.mockImplementationOnce(() => Promise.resolve(group));
+    await groupController.createGroup(req, res);
+
+    expect(groupService.create).toHaveBeenCalledWith({ name, permission });
+    expect(res.send).toHaveBeenCalledWith(group);
   });
 
-  describe('POST /groups', () => {
-    test('should create group', () => {
-      groupService.create.mockImplementationOnce(() => Promise.resolve(group));
-      return request(server).post('/groups').send(group).expect(201, group);
-    });
+  test('should update group by id', async () => {
+    const { name, permission } = otherGroup;
+    const req = {
+      params: { id },
+      body: { name, permission }
+    };
+    groupService.updateById.mockImplementationOnce(() => Promise.resolve(true));
+    await groupController.updateGroup(req, res);
+
+    expect(groupService.updateById).toHaveBeenCalledWith(id, { name, permission });
+    expect(res.send).toHaveBeenCalledWith(`group ${id} is updated`);
   });
 
-  describe('PATCH /groups/:id', () => {
-    test('should update group by id', () => {
-      groupService.updateById.mockImplementationOnce(() => Promise.resolve(true));
-      return request(server).patch(`/groups/${id}`).send(otherGroup).expect(200, `group ${id} is updated`);
-    });
+  test('should delete group by id', async () => {
+    const req = {
+      params: { id }
+    };
+    groupService.removeById.mockImplementationOnce(() => Promise.resolve(true));
+    await groupController.deleteGroup(req, res);
+
+    expect(groupService.removeById).toHaveBeenCalledWith(id);
+    expect(res.send).toHaveBeenCalledWith(`group ${id} is deleted`);
   });
 
-  describe('DELETE /groups/:id', () => {
-    test('should delete group by id', () => {
-      groupService.removeById.mockImplementationOnce(() => Promise.resolve(true));
-      return request(server).delete(`/groups/${id}`).expect(200, `group ${id} is deleted`);
-    });
-  });
+  test('should users added to group', async () => {
+    const req = {
+      body: { groupId: id, userIds: ids }
+    };
+    groupService.addUsersToGroup.mockImplementationOnce(() => Promise.resolve(true));
+    await groupController.addUsersToGroup(req, res);
 
-  describe('POST /groups/add-users', () => {
-    test('should users added to group', () => {
-      groupService.addUsersToGroup.mockImplementationOnce(() => Promise.resolve(true));
-      return request(server)
-        .post('/groups/add-users')
-        .send({ groupId: id, userIds: ids })
-        .expect(200, `users ${ids} are added to group ${id}`);
-    });
+    expect(groupService.addUsersToGroup).toHaveBeenCalledWith(id, ids);
+    expect(res.send).toHaveBeenCalledWith(`users ${ids} are added to group ${id}`);
   });
 });

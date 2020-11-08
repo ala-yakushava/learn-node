@@ -1,58 +1,75 @@
-import express from 'express';
-import request from 'supertest';
-
-import router from '../src/routes';
+import { userController } from '../src/controllers';
 import { userService } from '../src/controllers/setup';
-import { user, otherUser, users, id } from './mock-data';
+import { user, users, otherUser, id, params } from './mock-data';
 
 jest.mock('../src/controllers/setup');
 
-describe('Tests for the /users path', () => {
-  let server;
+describe('Tests for userController', () => {
+  let res;
 
-  beforeAll(async () => {
-    server = express();
-    server.use(express.json());
-    server.use(express.urlencoded({ extended: true }));
-    server.use(router);
+  beforeEach(() => {
+    res = {
+      status: jest.fn(),
+      send: jest.fn()
+    };
   });
 
-  afterAll(async () => {
-    server.close();
+  test('should find user by id', async () => {
+    const req = {
+      params: { id }
+    };
+    userService.findById.mockImplementationOnce(() => Promise.resolve(user));
+    await userController.getUser(req, res);
+
+    expect(userService.findById).toHaveBeenCalledWith(id);
+    expect(res.send).toHaveBeenCalledWith(user);
   });
 
-  describe('GET /users/:id', () => {
-    test('should response user by id', () => {
-      userService.findById.mockImplementationOnce(() => Promise.resolve(user));
-      return request(server).get(`/users/${id}`).expect(200, user);
-    });
+  test('should find all users', async () => {
+    const { substring, limit } = params;
+    const req = {
+      query: { substring, limit }
+    };
+    userService.findByParams.mockImplementationOnce(() => Promise.resolve(users));
+    await userController.getUsers(req, res);
+
+    expect(userService.findByParams).toHaveBeenCalledWith(substring, limit);
+    expect(res.send).toHaveBeenCalledWith(users);
   });
 
-  describe('GET /users', () => {
-    test('should response users by query params', () => {
-      userService.findByParams.mockImplementationOnce(() => Promise.resolve(users));
-      return request(server).get('/users?substring=u&ulimit=2').expect(200, users);
-    });
+  test('should create user', async () => {
+    const { login, password, age } = user;
+    const req = {
+      body: { login, password, age }
+    };
+    userService.create.mockImplementationOnce(() => Promise.resolve(user));
+    await userController.createUser(req, res);
+
+    expect(userService.create).toHaveBeenCalledWith({ login, password, age });
+    expect(res.send).toHaveBeenCalledWith(user);
   });
 
-  describe('POST /users', () => {
-    test('should create user', () => {
-      userService.create.mockImplementationOnce(() => Promise.resolve(user));
-      return request(server).post('/users').send(user).expect(201, user);
-    });
+  test('should update user by id', async () => {
+    const { login, password, age } = otherUser;
+    const req = {
+      params: { id },
+      body: { login, password, age }
+    };
+    userService.updateById.mockImplementationOnce(() => Promise.resolve(true));
+    await userController.updateUser(req, res);
+
+    expect(userService.updateById).toHaveBeenCalledWith(id, { login, password, age });
+    expect(res.send).toHaveBeenCalledWith(`user ${id} is updated`);
   });
 
-  describe('PATCH /users/:id', () => {
-    test('should update user by id', () => {
-      userService.updateById.mockImplementationOnce(() => Promise.resolve(true));
-      return request(server).patch(`/users/${id}`).send(otherUser).expect(200, `user ${id} is updated`);
-    });
-  });
+  test('should delete user by id', async () => {
+    const req = {
+      params: { id }
+    };
+    userService.removeById.mockImplementationOnce(() => Promise.resolve(true));
+    await userController.deleteUser(req, res);
 
-  describe('DELETE /users/:id', () => {
-    test('should delete user by id', () => {
-      userService.removeById.mockImplementationOnce(() => Promise.resolve(true));
-      return request(server).delete(`/users/${id}`).expect(200, `user ${id} is deleted`);
-    });
+    expect(userService.removeById).toHaveBeenCalledWith(id);
+    expect(res.send).toHaveBeenCalledWith(`user ${id} is deleted`);
   });
 });

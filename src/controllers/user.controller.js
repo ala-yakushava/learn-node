@@ -4,7 +4,7 @@ export const userController = {
   getUser: async (req, res) => {
     const { id } = req.params;
     const user = await userService.findById(id);
-    return res.send(user);
+    res.send(user);
   },
 
   getUsers: async (req, res) => {
@@ -16,7 +16,8 @@ export const userController = {
   createUser: async (req, res) => {
     const { login, password, age } = req.body;
     const user = await userService.create({ login, password, age });
-    res.status(201).send(user);
+    res.status(201);
+    res.send(user);
   },
 
   updateUser: async (req, res) => {
