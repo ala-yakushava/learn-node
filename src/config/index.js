@@ -20,6 +20,14 @@ const databaseCredentials = {
     database: DB_DEV_DB_NAME,
     host: DB_HOST,
     dialect: 'postgres'
+  },
+  test: {
+    username: 'postgres',
+    password: '111',
+    database: 'postgres',
+    host: '127.0.0.1',
+    dialect: 'postgres',
+    port : 3001
   }
 };
 

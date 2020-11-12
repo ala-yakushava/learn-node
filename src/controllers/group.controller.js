@@ -1,14 +1,10 @@
-import { GroupService } from '../services';
-import { GroupRepository } from '../data-access';
-
-const groupRepository = new GroupRepository();
-const groupService = new GroupService(groupRepository);
+import { groupService } from './setup';
 
 export const groupController = {
   getGroup: async (req, res) => {
     const { id } = req.params;
     const group = await groupService.findById(id);
-    return res.send(group);
+    res.send(group);
   },
 
   getGroups: async (_req, res) => {
@@ -19,13 +15,14 @@ export const groupController = {
   createGroup: async (req, res) => {
     const { name, permission } = req.body;
     const group = await groupService.create({ name, permission });
-    res.status(201).send(group);
+    res.status(201);
+    res.send(group);
   },
 
   updateGroup: async (req, res) => {
     const { id } = req.params;
     const { name, permission } = req.body;
-    await groupService.update(id, { name, permission });
+    await groupService.updateById(id, { name, permission });
     res.send(`group ${id} is updated`);
   },
 

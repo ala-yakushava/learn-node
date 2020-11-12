@@ -53,7 +53,7 @@ export class UserService {
     }
   }
 
-  async update(id, data) {
+  async updateById(id, data) {
     try {
       return await this.userRepository.update(id, data);
     } catch (error) {

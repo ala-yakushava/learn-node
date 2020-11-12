@@ -3,12 +3,8 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 import jwt from 'jsonwebtoken';
 
-import { UserService } from '../services';
-import { UserRepository } from '../data-access';
+import { userService } from '../controllers/setup';
 import { secretOrKey } from '../config';
-
-const userRepository = new UserRepository();
-const userService = new UserService(userRepository);
 
 passport.use(new LocalStrategy(
   async (username, _password, next) => {

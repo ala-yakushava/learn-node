@@ -35,7 +35,7 @@ export class GroupService {
     }
   }
 
-  async update(id, data) {
+  async updateById(id, data) {
     try {
       return await this.groupRepository.update(id, data);
     } catch (error) {
